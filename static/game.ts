@@ -3,7 +3,7 @@
  * For a given position (x,y), Game.map[x][y] = [Background_Object, ForegroundObject, Additional Effect]
  */
 export class Game {
-    map: Array<Array<Array<GameObject>>>
+    map: Array<Array<[GameObject, GameObject, GameObject]>>
     width: number;
     height: number;
     constructor(width: number, height: number) {
