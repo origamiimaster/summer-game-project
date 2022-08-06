@@ -1,9 +1,9 @@
 /**
  * Represents the game with a 3d array of objects in positions. 
- * For a given position (x,y), Game.map[x][y] = [Background_Object, ForegroundObject, Additional Effect]
+ * For a given position (x,y), Game.map[x][y] = [Background_Object, ForegroundObject, Additional Effect, ...]
  */
 export class Game {
-    map: Array<Array<[GameObject, GameObject, GameObject]>>
+    map: Array<Array<Array<GameObject>>>
     width: number;
     height: number;
     constructor(width: number, height: number) {
@@ -28,6 +28,12 @@ export class Game {
     }
     setBackground(x: number, y: number, tile: GameObject){ 
         this.map[x][y][0] = tile;
+    }
+    getTile(x: number, y: number, depth: number) {
+        return this.map[x][y][depth]
+    }
+    setTile(x: number, y: number, depth: number, tile: GameObject) {
+        this.map[x][y][depth] = tile;
     }
 }
 
@@ -55,6 +61,7 @@ export class RedGameTile extends GameObject{
         super("RedTile", "rgba(255,0,0,1)")
     }
 }
+
 export class BlackGameTile extends GameObject{
     constructor(){
         super("RedTile", "rgba(0,0,0,1)")
