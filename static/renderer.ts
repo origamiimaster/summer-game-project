@@ -1,4 +1,4 @@
-import { Game } from "./game.js"
+import { Game, GameObject } from "./game.js"
 
 /**
  * A basic renderer that prints the game state to the console.
@@ -40,11 +40,21 @@ export class CanvasRenderer extends Renderer {
     draw() {
         for (let x = 0; x < this.game.width; x++) {
             for (let y = 0; y < this.game.height; y++) {
-                this.context.fillStyle = this.game.map[x][y][0].color;
-                this.context.fillRect(x * 50, y * 50, 50, 50);
+                for (let d = 0; d < this.game.map[x][y].length; d++) {
+                    if (this.game.map[x][y][d].sprite != null) { 
+                        console.log(this.game.map[x][y][d])
+                        this.spriteHandler.drawSpriteFromInfo(this.context, this.game.map[x][y][d], x * 50, y * 50);
+                    } else {
+                        this.drawColorTile(x, y, this.game.map[x][y][d]);
+                    }
+                }
             }
         }
-        this.spriteHandler.drawSprite(this.context, 0, 0, 0, 0);
+        // this.spriteHandler.drawSprite(this.context, 0, 0, 0, 0);
+    }
+    drawColorTile(x: number, y: number, object: GameObject){ 
+        this.context.fillStyle = this.game.map[x][y][0].color;
+        this.context.fillRect(x * 50, y * 50, 50, 50);
     }
 }
 
@@ -74,6 +84,10 @@ export class SpriteHandler {
         // ctx.drawImage(this.spritesheets[spritesheetNumber][0], 0, 0);
         ctx.drawImage(this.spritesheets[spritesheetNumber][0], this.spritesheets[spritesheetNumber][1][spriteNumber][0], this.spritesheets[spritesheetNumber][1][spriteNumber][1], this.width, this.height, canvasX, canvasY, this.width, this.height);
         // ctx.drawImage(this.spritesheets[spritesheetNumber][0], 0, 0, 270, 90, 0, 0, 270, 90);
+    }
+    drawSpriteFromInfo(ctx: CanvasRenderingContext2D, obj: GameObject, x: number, y: number) {
+        // TODO: Change 50px in destination to variable, or take argument from renderer.  
+        ctx.drawImage(this.spritesheets[0][0], obj.sprite.spriteX, obj.sprite.spriteY, obj.sprite.spriteWidth, obj.sprite.spriteHeight, x, y, 50, 50);
     }
 }
 

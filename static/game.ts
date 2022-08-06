@@ -14,7 +14,7 @@ export class Game {
         for (let i = 0; i < width; i++) {
             this.map.push([]);
             for (let j = 0; j < height; j++) {
-                this.map[i].push([new BlankGameObject(), new BlankGameObject(), new BlankGameObject()]);
+                this.map[i].push([new BlankGameObject(), new BlankGameObject()]);
                 if ((i + j) % 2 == 0) {
                     this.setBackground(i, j, new RedGameTile());
                 } else {
@@ -26,44 +26,76 @@ export class Game {
     getBackground(x: number, y: number) {
         return this.map[x][y][0]
     }
-    setBackground(x: number, y: number, tile: GameObject){ 
+    setBackground(x: number, y: number, tile: GameObject) {
         this.map[x][y][0] = tile;
     }
-    getTile(x: number, y: number, depth: number) {
-        return this.map[x][y][depth]
+    getTile(x: number, y: number) {
+        return this.map[x][y][1]
     }
-    setTile(x: number, y: number, depth: number, tile: GameObject) {
-        this.map[x][y][depth] = tile;
+    setTile(x: number, y: number, tile: GameObject) {
+        this.map[x][y][1] = tile;
+    }
+    addEffect(x: number, y: number, effect: GameObject){ 
+        console.assert(this.map[x][y].length >= 2, "Not enough tiles");
+        this.map[x][y].push(effect)
+    }
+    removeEffects(x: number, y: number){ 
+        for (let i = 2; i < this.map[x][y].length; i++) {
+            this.map[x][y].pop();
+        }
     }
 }
 
-export class GameObject{
+export class GameObject {
     name: string;
     color: string;
-    constructor(name: string, color: string){
-        if (!color || color == ""){
-            this.color = "#" + Math.floor(Math.random()*16777215).toString(16);
+    sprite: SpriteInformation | null = null;
+    constructor(name: string, color: string) {
+        if (!color || color == "") {
+            // TODO: Add no rendering provided sprite / appearance
+            this.color = "#" + Math.floor(Math.random() * 16777215).toString(16);
         } else {
             this.color = color;
         }
         this.name = name;
     }
 }
+export class SpriteGameObject extends GameObject {
+    constructor(name: string, color: string, spriteInfo: SpriteInformation | null) {
+        super(name, color);
+        if (spriteInfo && spriteInfo != null) {
+            this.sprite = spriteInfo;
+        }
+    }
+}
 
-export class BlankGameObject extends GameObject{
-    constructor(){
+export class BlankGameObject extends GameObject {
+    constructor() {
         super("Blank", "rgba(255,255,255,0)")
     }
 }
 
-export class RedGameTile extends GameObject{
-    constructor(){
+export class RedGameTile extends GameObject {
+    constructor() {
         super("RedTile", "rgba(255,0,0,1)")
     }
 }
 
-export class BlackGameTile extends GameObject{
-    constructor(){
+export class BlackGameTile extends GameObject {
+    constructor() {
         super("RedTile", "rgba(0,0,0,1)")
+    }
+}
+
+export class SpriteInformation {
+    spriteX: number;
+    spriteY: number;
+    spriteWidth: number;
+    spriteHeight: number;
+    constructor(x: number, y: number, w: number, h: number) {
+        this.spriteX = x;
+        this.spriteY = y;
+        this.spriteWidth = w;
+        this.spriteHeight = h;
     }
 }
